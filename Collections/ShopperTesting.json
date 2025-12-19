@@ -13,6 +13,13 @@
 					"script": {
 						"id": "63cb203c-5bf6-4086-bba5-6a6947ec4f6e",
 						"exec": [
+							"// Generate Nigerian phone number: 80XXXXXXXX (10 digits)\r",
+							"const suffix = Math.floor(10000000 + Math.random() * 90000000);\r",
+							"const phone = `80${suffix}`;\r",
+							"\r",
+							"pm.variables.set(\"phone\", phone);\r",
+							"\r",
+							"console.log(\"Generated phone:\", phone);\r",
 							""
 						],
 						"type": "text/javascript",
@@ -49,7 +56,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"Nigeria\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"firstName\": \"Ify\",\r\n  \"gender\": \"MALE\",\r\n  \"lastName\": \"Oma\",\r\n  \"password\": \"MyPassword001\",\r\n  \"phone\": \"{{$randomPhoneNumber}}\",\r\n  \"state\": \"Lagos\",\r\n  \"zoneId\": \"ALPHA\"\r\n}",
+					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"Nigeria\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"firstName\": \"Ify\",\r\n  \"gender\": \"MALE\",\r\n  \"lastName\": \"Oma\",\r\n  \"password\": \"MyPassword001\",\r\n  \"phone\": \"{{phone}}\",\r\n  \"state\": \"Lagos\",\r\n  \"zoneId\": \"ALPHA\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
