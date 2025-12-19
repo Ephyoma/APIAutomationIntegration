@@ -217,13 +217,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{endpoint}}/shoppers/329768",
+					"raw": "{{endpoint}}/shoppers/330436",
 					"host": [
 						"{{endpoint}}"
 					],
 					"path": [
 						"shoppers",
-						"329768"
+						"330436"
 					],
 					"query": [
 						{
@@ -380,7 +380,10 @@
 			},
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
 				},
 				"method": "POST",
 				"header": [
