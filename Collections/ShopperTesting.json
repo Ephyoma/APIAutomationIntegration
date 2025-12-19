@@ -1,0 +1,2166 @@
+{
+	"info": {
+		"_postman_id": "1d6caa0f-94e3-42c3-970d-360cbf9f151c",
+		"name": "Shopper Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "shoppers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63cb203c-5bf6-4086-bba5-6a6947ec4f6e",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Status code name has string\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.response.to.have.responseTime.below(500);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "946a6afd-3676-4c81-86fe-68ed11a127ed",
+						"exec": [
+							"// Generate Nigerian phone number: 80XXXXXXXX\r",
+							"const suffix = Math.floor(10000000 + Math.random() * 90000000).toString();\r",
+							"const phone = `80${suffix}`;\r",
+							"\r",
+							"\r",
+							"// Save as a variable (request-level variable is safest)\r",
+							"pm.variables.set(\"phone\", phone);\r",
+							"\r",
+							"//console.log(\"Generated 10-digit phone:\", phone);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "8967c3fa-c4b9-44a9-b776-fe401cc194d9",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"Nigeria\",\r\n  \"email\": \"ifyomaokorie@gmail.com\",\r\n  \"firstName\": \"Ify\",\r\n  \"gender\": \"MALE\",\r\n  \"lastName\": \"Oma\",\r\n  \"password\": \"MyPassword001\",\r\n  \"phone\": \"8012653412\",\r\n  \"state\": \"Lagos\",\r\n  \"zoneId\": \"ALPHA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers"
+			},
+			"response": []
+		},
+		{
+			"name": "users/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "601c8d2a-b4e1-4652-9839-b797b313e303",
+						"exec": [
+							"pm.test(\"check if Responses returns status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"check if Responses returns value for userId\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.data.userId).to.not.be.null;\r",
+							"});\r",
+							"pm.test(\"check if Responses returns value for email\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.data.email).to.not.be.null;\r",
+							"});\r",
+							"// Save jwtToken and userId\r",
+							"pm.test(\"Save jwtToken in Collection Variables\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"pm.collectionVariables.set(\"jwtToken\", response.data.jwtToken);\r",
+							"});\r",
+							"pm.test(\"Save userId in collection Variables\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"userId\", response.data.userId);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "0e3382ca-de20-41a3-bd0f-963e1e9bccdb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"ifyoma@gmail.com\",\r\n  \"password\": \"MyPassword001\",\r\n  \"role\": \"SHOPPER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/users/login"
+			},
+			"response": []
+		},
+		{
+			"name": "get shopper by shopperId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70946877-91af-4df6-95ff-01644bcd18ee",
+						"exec": [
+							"// Verify that createdDateTime is not null\r",
+							"pm.test(\"createdDateTime is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data.createdDateTime).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"// verify that role returns shopper role\r",
+							"pm.test(\"role is SHOPPER\", function () {\r",
+							"    pm.expect(pm.response.json().data.role).to.eql(\"SHOPPER\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "1f0a9432-6f5b-4932-ab10-876cb49b6571",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/shoppers/329768",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"shoppers",
+						"329768"
+					],
+					"query": [
+						{
+							"key": "shopperId",
+							"value": "329768",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateShopperDetails",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eed36386-39e1-43b1-ab1f-2966cac709a0",
+						"exec": [
+							"//Verify  that the new updated name is returned in the response body\r",
+							"pm.test(\"Verify the updated name is returned in the response body\", function () {\r",
+							"    pm.expect(pm.response.json().data.firstName).to.eql(\"Ella\");\r",
+							"    pm.expect(pm.response.json().data.lastName).to.eql(\"Jireh\");\r",
+							"});\r",
+							"\r",
+							"// Verify the status code is 200 and response message is \"Success\"\r",
+							"pm.test(\"Verify the status code and response message\", function () {\r",
+							"    pm.expect(pm.response.json().statusCode).to.eql(200);\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Success\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "1024881e-0bb6-4d69-bb16-65a3b0007afc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"America\",\r\n  \"email\": \"Ify1@gmail.com\",\r\n  \"firstName\": \"Ella\",\r\n  \"gender\": \"Female\",\r\n  \"lastName\": \"Jireh\",\r\n  \"password\": \"Myfamily@2018\",\r\n  \"phone\":8098765432,\r\n  \"state\": \"IMo\",\r\n  \"zoneId\": \"BETA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/329768"
+			},
+			"response": []
+		},
+		{
+			"name": "forgot-password",
+			"id": "20876f49-271c-42df-bd8b-d82b91dfc1cb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "email",
+						"value": "Judd31@hotmail.com",
+						"type": "text"
+					},
+					{
+						"key": "role",
+						"value": "SHOPPER",
+						"type": "text"
+					},
+					{
+						"key": "verifyUrl",
+						"value": "https://www.shoppersstack.com/shopping/forgot-password",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "{{endpoint}}/users/forgot-password"
+			},
+			"response": []
+		},
+		{
+			"name": "/reset-password",
+			"id": "2aa2ce29-8879-4867-8b45-c864d901941c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					},
+					{
+						"key": "x-reset-token",
+						"value": "{{resetToken}}"
+					},
+					{
+						"key": "token",
+						"value": "kTsr4U7rPHc3EeolWNOKbEXTysJTZe34OgG3iNNpeZnLn",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\": \"NewStrongPassword@123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/users/reset-password"
+			},
+			"response": []
+		},
+		{
+			"name": "SetNewPassword",
+			"id": "96a6a935-5505-4afd-8913-a37cb61faddd",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "password",
+						"value": "MyNewPass",
+						"description": "MyNewPass"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/users/verify-account?token=kTsr4U7rPHc3EeolWNOKbEXTysJTZe34OgG3iNNpeZnLn",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"users",
+						"verify-account"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "kTsr4U7rPHc3EeolWNOKbEXTysJTZe34OgG3iNNpeZnLn"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9904c051-40e8-4dff-b7ee-ad064ab6f96a",
+						"exec": [
+							"//verify that productID 16702 exists in the response body\r",
+							"pm.test(\"Product ID 16702 exists\", function () {\r",
+							"    pm.expect(pm.response.json().data.some(product => product.productId === 16702)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"//check to see if productId 27 has type boys-tshirt\r",
+							"pm.test(\"Product ID 27 has type boys-tshirt\", function () {\r",
+							"    pm.expect(pm.response.json().data.some(product => product.productId === 27 && product.type === \"boys-tshirt\")).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "9954eb67-cd11-49ef-8543-78273d0950a1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/products?zoneId=ALPHA",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "zoneId",
+							"value": "ALPHA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "default products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "960496e3-2d25-43c9-b167-8a1525420119",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has valid data structure\", function () {",
+							"    const response = pm.response.json();",
+							"    pm.expect(response).to.have.property(\"data\");",
+							"    pm.expect(response.data).to.be.an(\"array\");",
+							"});",
+							"",
+							"pm.test(\"Review with reviewId 19790 is present\", function () {",
+							"    const response = pm.response.json();",
+							"    ",
+							"    // Flatten all reviews from all products",
+							"    const allReviews = response.data.flatMap(product => product.reviews || []);",
+							"    ",
+							"    // Find the review with reviewId 19790 (as a number)",
+							"    const targetReview = allReviews.find(review => review.reviewId === 19790);",
+							"    ",
+							"    // Assert the review exists",
+							"    pm.expect(targetReview, \"Review with reviewId 19790 should exist\").to.not.be.undefined;",
+							"    ",
+							"    // Assert the reviewId is exactly 19790",
+							"    pm.expect(targetReview.reviewId).to.eql(19790);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "0312d48c-22f5-4720-8f2d-642d02c4e0c8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/products/alpha?zoneId=ALPHA",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"products",
+						"alpha"
+					],
+					"query": [
+						{
+							"key": "zoneId",
+							"value": "ALPHA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all the addresses of the specified User with ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a1d738b4-ef2c-4e87-b34a-7fd1aabeb0f7",
+						"exec": [
+							"//verity that data is not null\r",
+							"pm.test(\"Verify data is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"//verify that data is an array\r",
+							"pm.test(\"Verify data is an array\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.be.an('array');\r",
+							"});\r",
+							"// verify that data array has at least one element\r",
+							"pm.test(\"Verify data array has at least one element\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.have.lengthOf.at.least(1);\r",
+							"});\r",
+							"// verify that the first element in the data array has the correct addressId\r",
+							"pm.test(\"Verify the first element in the data array has the correct addressId\", function () {\r",
+							"    pm.expect(pm.response.json().data[0].addressId).to.equal(111712);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "1961f912-7d4b-4e6d-bb8b-ac408ac27083",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/address"
+			},
+			"response": []
+		},
+		{
+			"name": "Addnew Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94623b73-e3b6-48f5-8737-c5160795370d",
+						"exec": [
+							"//verity that data is not null\r",
+							"pm.test(\"Verify data is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"//verify that addressId is not null\r",
+							"pm.test(\"Verify addressId is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data.addressId).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"//verify that landmark is Jakunde\r",
+							"pm.test(\"Verify landmark is Osapa Road\", function () {\r",
+							"    pm.expect(pm.response.json().data.landmark).to.eql(\"Jakunde\");\r",
+							"});\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"//To save addressId in collectionVariables\r",
+							"pm.test(\"Save addressId in collectionVariables\", function () {\r",
+							"    let jsonData = pm.response.json(); \r",
+							"    pm.collectionVariables.set(\"addressId\", jsonData.data.addressId);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "4d758645-dd1b-4f4c-91a8-1aad7af14557",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"addressId\": 138608,\r\n  \"buildingInfo\": \"Acvbf\",\r\n  \"city\": \"Lekki\",\r\n  \"country\": \"Nigeria\",\r\n  \"landmark\": \"Jakunde\",\r\n  \"name\": \"Ifeoma Address\",\r\n  \"phone\": \"9723547056\",\r\n  \"pincode\": \"560010\",\r\n  \"state\": \"Lagos\",\r\n  \"streetInfo\": \"Osapa Road\",\r\n  \"type\": \"office\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/329768/address"
+			},
+			"response": []
+		},
+		{
+			"name": "Get user Address by address ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e31dbb96-0f78-46e6-b426-dc6d3b47d330",
+						"exec": [
+							"//verify that data is not null",
+							"pm.test(\"Verify data is not null\", function () {",
+							"    pm.expect(pm.response.json().data).to.not.be.null;",
+							"});",
+							"",
+							"//verify that data is an object",
+							"pm.test(\"Verify data is an object\", function () {",
+							"    pm.expect(pm.response.json().data).to.be.an('object');",
+							"});",
+							"",
+							"// verify that data object has buildingInfo property",
+							"pm.test(\"Verify data object has buildingInfo property\", function () {",
+							"    pm.expect(pm.response.json().data).to.have.property('buildingInfo');",
+							"});",
+							"",
+							"// verify that the data object has the correct name",
+							"pm.test(\"Verify the data object has the correct name\", function () {",
+							"    pm.expect(pm.response.json().data.name).to.equal(\"Ifeoma Address\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "3459b098-eb82-438e-8ceb-685fad36bc3e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/329768/address/{{addressId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Update an Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7650701-33ef-4b1f-a982-cde0c86a52d6",
+						"exec": [
+							"//verity that data is not null\r",
+							"pm.test(\"Verify data is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"//verify that addressId is not null\r",
+							"pm.test(\"Verify addressId is not null\", function () {\r",
+							"    pm.expect(pm.response.json().data.addressId).to.not.be.null;\r",
+							"});\r",
+							"\r",
+							"//verify that landmark is Jakunde\r",
+							"pm.test(\"Verify landmark is Airport\", function () {\r",
+							"    pm.expect(pm.response.json().data.landmark).to.eql(\"Airport\");\r",
+							"});\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.response.to.have.header(\"Content-Type\", \"application/json\");\r",
+							"\r",
+							"pm.test(\"Successful pu request\", function () {\r",
+							"    pm.expect(pm.response.json().message).to.eql(\"Success\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "70d015fd-76d8-4335-b51e-2eeb95bf8ccf",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"addressId\": 0,\r\n  \"buildingInfo\": \"Qwert\",\r\n  \"city\": \"Aba\",\r\n  \"country\": \"Dubai\",\r\n  \"landmark\": \"Airport\",\r\n  \"name\": \"Mega city\",\r\n  \"phone\": \"8907654329\",\r\n  \"pincode\": \"12345\",\r\n  \"state\": \"IMo\",\r\n  \"streetInfo\": \"Pinacle street\",\r\n  \"type\": \"Apartment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/329768/address/{{addressId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "416aaaee-3ab0-4c49-ba04-a15bb0474c63",
+						"exec": [
+							"//ALL Deleted Request must return with 204 No Content\r",
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Date is im the response header\", function () {\r",
+							"  pm.expect(pm.response.headers.get(\"Date\")).to.not.be.null;\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "5d802b26-e6ad-4b7d-9093-bfe10d7958ff",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/329768/address/{{addressId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Wishlist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6eaf52e5-2fad-4504-8875-1a397fcc72e4",
+						"exec": [
+							"//verify that data is an array\r",
+							"pm.test(\"Verify data is an array\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"//verify data is an array with at least one item\r",
+							"pm.test(\"Verify data array has at least one item\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.have.lengthOf.at.least(1);\r",
+							"});\r",
+							"//verify data array contains an item with itemId 300449\r",
+							"pm.test(\"Verify data array contains an item with itemId 300449\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.satisfy(function (data) {\r",
+							"        return data.some(item => item.itemId === 300449);\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify the status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "273f6c64-a024-486c-9ca1-b7d95a80c183",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/wishlist"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Wishlist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2465f06f-b6d7-45f2-ab6c-7a232b1a776d",
+						"exec": [
+							"//verify response header has content type application/json\r",
+							"pm.test(\"Response header content type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"//verify response body data has at least 1 item detail\r",
+							"pm.test(\"Response body has at least one item detail\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.have.property(\"itemId\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "d4d7bea8-e70e-46b6-9547-b7db63a8961f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": 133,\r\n  \"quantity\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/236153/wishlist"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete From Wishlist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8ce53a75-a453-473b-9548-72e37af3fce2",
+						"exec": [
+							"//verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"\r",
+							"//ALL Deleted Request must return with 204 No Content\r",
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "c7f7fcf2-de84-4cf7-a5f6-db009d5224a0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/wishlist/27"
+			},
+			"response": []
+		},
+		{
+			"name": "Shopper cats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "070c4263-59a2-4877-bd76-ed797bc3ab74",
+						"exec": [
+							"//verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "cdabe492-8057-4600-a168-cd958ef4a427",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/315383/carts"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product to Cat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c593ee2-960c-402c-a71d-cd8e9f3d4e0d",
+						"exec": [
+							"//verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "7ad38cbf-8642-497d-abe3-8193cb042aa6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": 16825,\r\n  \"quantity\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/315383/carts"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Cat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c31f589-7ac7-4382-8184-adf9aa4b758b",
+						"exec": [
+							"//verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Status Code is 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(404);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Response Body contains expected message\", function () {\r",
+							"        pm.expect(pm.response.text()).to.include(\"NOT_FOUND\");\r",
+							"        });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "5150ed10-25d4-4b14-87ce-caaa9dfb9e96",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productId\": 16825,\r\n  \"quantity\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/236153/carts/417450"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteFromCat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "73062e42-d52f-4f24-99a7-a744ca7aae2c",
+						"exec": [
+							"pm.test(\"Response Status Code is 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(404);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Response Body contains expected message\", function () {\r",
+							"        pm.expect(pm.response.text()).to.include(\"NOT_FOUND\");\r",
+							"        });\r",
+							"\r",
+							"        //verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "17ac06b0-ac3e-4ab1-9c4d-533798e62977",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/carts/16825"
+			},
+			"response": []
+		},
+		{
+			"name": "Orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02a1139d-f457-437c-97a5-f12ac76e9f2e",
+						"exec": [
+							"//verify response data is an array\r",
+							"pm.test(\"data is an array\", function () {\r",
+							"    pm.expect(pm.response.json().data).to.be.an('array');\r",
+							"    });\r",
+							"        //verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"\r",
+							"//verify response status code is 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "8bbffc76-c4eb-4029-9a82-f834953bc6ce",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/orders"
+			},
+			"response": []
+		},
+		{
+			"name": "Placed Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a5227825-5a48-45a8-ba31-e7550249cfba",
+						"exec": [
+							"pm.test(\"Response Status Code is 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(404);\r",
+							"    });\r",
+							"\r",
+							"    pm.test(\"Response Body contains expected message\", function () {\r",
+							"        pm.expect(pm.response.text()).to.include(\"NOT_FOUND\");\r",
+							"        });\r",
+							"\r",
+							"        //verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "0c123463-1bf3-4609-b20f-88e3f27388b5",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"address\": {\r\n    \"addressId\": 138614,\r\n    \"buildingInfo\": \"qweezz\",\r\n    \"city\": \"Oyo\",\r\n    \"country\": \"Nigeria\",\r\n    \"landmark\": \"Jakunde\",\r\n    \"name\": \"Test\",\r\n    \"phone\": \"8901234567\",\r\n    \"pincode\": \"100001\",\r\n    \"state\": \"Lagos\",\r\n    \"streetInfo\": \"Just look\",\r\n    \"type\": \"Home\"\r\n  },\r\n  \"paymentMode\": \"COD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{endpoint}}/shoppers/315383/orders"
+			},
+			"response": []
+		},
+		{
+			"name": "updateOrderSTatus",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "601a68ef-2703-419a-a45a-c0e0fbda6ccd",
+						"exec": [
+							"//verify response header contains expected values\r",
+							"pm.test(\"Response Header contains expected values\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"    pm.expect(pm.response.headers.get(\"Server\")).to.include(\"nginx\");\r",
+							"});\r",
+							"\r",
+							"//verify response status code is 200\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    });\r",
+							"\r",
+							"    //verity response jsonData contains at least one item in orderedItems array\r",
+							"pm.test(\"Response body contains at least one item in orderedItems array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.orderedItems.length).to.be.at.least(1);\r",
+							"});\r",
+							"//verify Required fields in response body\r",
+							"pm.test(\"Response body contains required fields\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data).to.have.property('orderId');\r",
+							"    pm.expect(jsonData.data).to.have.property('shopperId');\r",
+							"    pm.expect(jsonData.data).to.have.property('orderStatus');\r",
+							"    pm.expect(jsonData.data).to.have.property('address');\r",
+							"    pm.expect(jsonData.data).to.have.property('orderedItems');\r",
+							"    pm.expect(jsonData.data).to.have.property('orderDate');\r",
+							"    pm.expect(jsonData.data).to.have.property('lastModifiedDate');\r",
+							"    pm.expect(jsonData.data).to.have.property('actualPrice');\r",
+							"    pm.expect(jsonData.data).to.have.property('discountPrice');\r",
+							"    pm.expect(jsonData.data).to.have.property('totalPrice');\r",
+							"    pm.expect(jsonData.data).to.have.property('paymentMode');\r",
+							"    pm.expect(jsonData.data).to.have.property('transactionId');\r",
+							"    });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "62646cb1-5617-46fa-a459-b0f22c29e945",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/shoppers/236153/orders/42686?status=IN_TRANSIT",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"shoppers",
+						"236153",
+						"orders",
+						"42686"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "IN_TRANSIT"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateInvoice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52bf65b5-0d4f-4e07-aefe-8388d5a2aa4f",
+						"exec": [
+							"//verify Response code is 200",
+							"",
+							"pm.test(\"Invoice request returns 200 OK\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"//verify header has content=type as application/pdf",
+							"pm.test(\"Response content-type is PDF\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/pdf\");",
+							"});",
+							"",
+							"//verify response body is not empty",
+							"pm.test(\"Response body is not empty\", function () {",
+							"pm.expect(pm.response.text()).to.not.be.empty;",
+							"});",
+							"//Verify invoice title exists",
+							"pm.test(\"Invoice title is present\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Firelawn Invoice\");",
+							"});",
+							"",
+							"//Verify response is a PDF document",
+							"pm.test(\"Response is a PDF document\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\"))",
+							"      .to.include(\"application/pdf\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "4bebf277-de2a-46a8-8cb8-e2ad51dd8efe",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}/shoppers/236153/orders/42686/invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "productReview",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a8806ce7-ec45-4b41-aa4a-8a815a0e4c06",
+						"exec": [
+							"// Parse JSON response once at the top",
+							"const jsonData = pm.response.json();",
+							"",
+							"// Status code check",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"// Message is Success",
+							"pm.test(\"Message is Success\", function () {",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");",
+							"});",
+							"",
+							"// reviewId exists and is a number",
+							"pm.test(\"reviewId is present\", function () {",
+							"    pm.expect(jsonData.data).to.have.property(\"reviewId\");",
+							"    pm.expect(jsonData.data.reviewId).to.be.a(\"number\");",
+							"});",
+							"",
+							"// shopperName is present",
+							"pm.test(\"shopperName is present\", function () {",
+							"    pm.expect(jsonData.data.shopperName).to.be.a(\"string\");",
+							"    pm.expect(jsonData.data.shopperName).to.not.be.empty;",
+							"});",
+							"",
+							"// rating is valid",
+							"pm.test(\"rating is a number\", function () {",
+							"    pm.expect(jsonData.data.rating).to.be.a(\"number\");",
+							"});",
+							"",
+							"// dateTime exists",
+							"pm.test(\"dateTime is present\", function () {",
+							"    pm.expect(jsonData.data.dateTime).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "b63e4d2f-5793-4996-9dd8-24aa140a9239",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"dateTime\": \"2025-12-19T03:47:08.435Z\",\r\n  \"description\": \"Perfect size and neat\",\r\n  \"heading\": \"Shoe Size\",\r\n  \"rating\": 4.5,\r\n  \"shopperId\": 6198,\r\n  \"shopperName\": \"Nikita Bacha\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/reviews?productId=113",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"reviews"
+					],
+					"query": [
+						{
+							"key": "productId",
+							"value": "113"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Review",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "71c12425-92da-4872-8795-65027062ec7f",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// Message check\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// Data is an array\r",
+							"pm.test(\"Data is an array\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+							"    pm.expect(jsonData.data.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"// Each review has required fields\r",
+							"pm.test(\"Each review contains required fields\", function () {\r",
+							"    jsonData.data.forEach(review => {\r",
+							"        pm.expect(review).to.have.property(\"reviewId\");\r",
+							"        pm.expect(review).to.have.property(\"shopperId\");\r",
+							"        pm.expect(review).to.have.property(\"shopperName\");\r",
+							"        pm.expect(review).to.have.property(\"rating\");\r",
+							"        pm.expect(review).to.have.property(\"dateTime\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Verify Nikita Bacha review exists\r",
+							"pm.test(\"Review by Nikita Bacha exists\", function () {\r",
+							"    const found = jsonData.data.some(\r",
+							"        review => review.shopperName === \"Nikita Bacha\"\r",
+							"    );\r",
+							"    pm.expect(found).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "02edbf51-c2be-4abf-b420-7264fa4dec0e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{endpoint}}//reviews/113"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Review",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f4f8b8b-dd07-4ee4-b399-9c3e70d81016",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// Status code validation\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// Message validation\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// Data object exists\r",
+							"pm.test(\"Data object is present\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+							"});\r",
+							"\r",
+							"// Validate review details\r",
+							"pm.test(\"Review details are correct\", function () {\r",
+							"    pm.expect(jsonData.data.reviewId).to.eql(23547);\r",
+							"    pm.expect(jsonData.data.shopperName).to.eql(\"Nikita Bacha\");\r",
+							"    pm.expect(jsonData.data.rating).to.eql(5.0);\r",
+							"});\r",
+							"\r",
+							"// Required fields exist\r",
+							"pm.test(\"All required fields exist in data\", function () {\r",
+							"    pm.expect(jsonData.data).to.have.property(\"reviewId\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"shopperId\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"heading\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"description\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"dateTime\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "675bb9f2-549d-4501-a9b4-0d9f2561f338",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"dateTime\": \"2025-12-19T04:14:47.142Z\",\r\n  \"description\": \"What I ordered versus What I received\",\r\n  \"heading\": \"Perfect in al ways\",\r\n  \"rating\": 5,\r\n  \"shopperId\": 6198,\r\n  \"shopperName\": \"Nikita Bacha\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/reviews/23547?productId=113",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"reviews",
+						"23547"
+					],
+					"query": [
+						{
+							"key": "productId",
+							"value": "113"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Review",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a73cccbb-1d5f-4f93-b977-ba675febb486",
+						"exec": [
+							"// Status code validation (most DELETE APIs return 204)\r",
+							"pm.test(\"Delete request is successful\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+							"});\r",
+							"\r",
+							"// If response body exists, validate success message\r",
+							"if (pm.response.text()) {\r",
+							"    const response = pm.response.json();\r",
+							"\r",
+							"    pm.test(\"Delete response message is Success\", function () {\r",
+							"        pm.expect(response.message || response.status || \"Success\")\r",
+							"            .to.exist;\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "690f2d21-32de-4d1d-abb6-36f9ae06b786",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/reviews/24680?productId=113",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"reviews",
+						"24680"
+					],
+					"query": [
+						{
+							"key": "productId",
+							"value": "113"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Createcard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1785999b-7483-46e6-8893-0b71e874d284",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// 1. Status code check\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"});\r",
+							"\r",
+							"// 2. Message check\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// 3. Data object exists\r",
+							"pm.test(\"Data object is present\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+							"});\r",
+							"\r",
+							"// 4. Validate required fields\r",
+							"pm.test(\"Created card contains required fields\", function () {\r",
+							"    pm.expect(jsonData.data).to.have.property(\"cardId\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"shopperId\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"email\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"number\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"cardType\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"expiryDate\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"nameOnCard\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"bankName\");\r",
+							"    pm.expect(jsonData.data).to.have.property(\"balance\");\r",
+							"});\r",
+							"\r",
+							"// 5. Verify card belongs to Nikita Bacha\r",
+							"pm.test(\"Card belongs to Nikita Bacha\", function () {\r",
+							"    pm.expect(jsonData.data.nameOnCard).to.eql(\"Nikita Bacha\");\r",
+							"});\r",
+							"\r",
+							"// 6. Extract cardId for later use (optional but useful)\r",
+							"pm.environment.set(\"cardId\", jsonData.data.cardId);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "e1ae9ed3-9010-48cb-a531-de998fc8258e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/cards?bankName=ICD&cardType=DEBIT&email=ifyoma@gmail.com&name=Nikita%20Bacha&shopperId=330436",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"cards"
+					],
+					"query": [
+						{
+							"key": "bankName",
+							"value": "ICD"
+						},
+						{
+							"key": "cardType",
+							"value": "DEBIT"
+						},
+						{
+							"key": "email",
+							"value": "ifyoma@gmail.com"
+						},
+						{
+							"key": "name",
+							"value": "Nikita%20Bacha"
+						},
+						{
+							"key": "shopperId",
+							"value": "330436"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Cards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "97414772-1a68-42cf-bf67-c212a0fe0a3d",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// Message check\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// Data is an array\r",
+							"pm.test(\"Data is an array\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+							"    pm.expect(jsonData.data.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"// Validate required fields in each card\r",
+							"pm.test(\"Each card contains required fields\", function () {\r",
+							"    jsonData.data.forEach(card => {\r",
+							"        pm.expect(card).to.have.property(\"id\");\r",
+							"        pm.expect(card).to.have.property(\"number\");\r",
+							"        pm.expect(card).to.have.property(\"cvv\");\r",
+							"        pm.expect(card).to.have.property(\"nameOnCard\");\r",
+							"        pm.expect(card).to.have.property(\"expiryDate\");\r",
+							"        pm.expect(card).to.have.property(\"type\");\r",
+							"        pm.expect(card).to.have.property(\"userId\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Verify card belongs to Nikita Bacha\r",
+							"pm.test(\"Card belongs to Nikita Bacha\", function () {\r",
+							"    const found = jsonData.data.some(\r",
+							"        card => card.nameOnCard === \"Nikita Bacha\"\r",
+							"    );\r",
+							"    pm.expect(found).to.be.true;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "667cbfac-4111-4d8c-a611-750471f40afc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/cards/6198?type=CREDIT",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"",
+						"cards",
+						"6198"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "CREDIT"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Card Amount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4d8220a6-73b1-4df8-bee9-8d60a8a685d2",
+						"exec": [
+							"// 1. Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// 2. Content-Type is HTML\r",
+							"pm.test(\"Response content-type is HTML\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\"))\r",
+							"        .to.include(\"text/html\");\r",
+							"});\r",
+							"\r",
+							"// 3. HTML document is returned\r",
+							"pm.test(\"HTML document is returned\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"<!doctype html>\");\r",
+							"});\r",
+							"\r",
+							"// 4. Page title is correct\r",
+							"pm.test(\"Page title is ShoppersStack\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"<title>ShoppersStack</title>\");\r",
+							"});\r",
+							"\r",
+							"// 5. React root div exists\r",
+							"pm.test(\"React root div exists\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include('<div id=\"root\"></div>');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "14e8edf1-3bed-491b-bd61-421e3a7d30df",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}cards?amount=5000&cardNumber=4644578161236505",
+					"host": [
+						"{{endpoint}}cards"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "5000"
+						},
+						{
+							"key": "cardNumber",
+							"value": "4644578161236505"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate cardamount",
+			"id": "8afb6196-e53b-45bc-9d41-eac63098f42f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Card Full Detais",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5aecdb89-4b50-4dfc-bcd9-6b586f03f46a",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// 1. Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// 2. Message check\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// 3. Data is an array and not empty\r",
+							"pm.test(\"Data is a non-empty array\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+							"    pm.expect(jsonData.data.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"// 4. Each card contains required fields\r",
+							"pm.test(\"Each card contains required fields\", function () {\r",
+							"    jsonData.data.forEach(card => {\r",
+							"        pm.expect(card).to.have.property(\"cardId\");\r",
+							"        pm.expect(card).to.have.property(\"shopperId\");\r",
+							"        pm.expect(card).to.have.property(\"email\");\r",
+							"        pm.expect(card).to.have.property(\"number\");\r",
+							"        pm.expect(card).to.have.property(\"cardType\");\r",
+							"        pm.expect(card).to.have.property(\"expiryDate\");\r",
+							"        pm.expect(card).to.have.property(\"nameOnCard\");\r",
+							"        pm.expect(card).to.have.property(\"bankName\");\r",
+							"        pm.expect(card).to.have.property(\"balance\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// 5. Verify cards belong to Nikita Bacha\r",
+							"pm.test(\"Cards belong to Nikita Bacha\", function () {\r",
+							"    const found = jsonData.data.every(\r",
+							"        card => card.nameOnCard === \"Nikita Bacha\"\r",
+							"    );\r",
+							"    pm.expect(found).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// 6. Verify balance is numeric\r",
+							"pm.test(\"Card balance is numeric\", function () {\r",
+							"    jsonData.data.forEach(card => {\r",
+							"        pm.expect(card.balance).to.be.a(\"number\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "5bae123c-d72e-49fd-a04d-607e854f12be",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/shoppers/cards?cardType=CREDIT&shopperId=6198",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"shoppers",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "cardType",
+							"value": "CREDIT"
+						},
+						{
+							"key": "shopperId",
+							"value": "6198"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetShopperBankAccount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "13991bed-2960-472a-8dc5-f43b160a325f",
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"// 1. Status code check\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"// 2. Message check\r",
+							"pm.test(\"Message is Success\", function () {\r",
+							"    pm.expect(jsonData.message).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"// 3. Data is an array and not empty\r",
+							"pm.test(\"Data is a non-empty array\", function () {\r",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");\r",
+							"    pm.expect(jsonData.data.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"// 4. Each bank account contains required fields\r",
+							"pm.test(\"Each bank account contains required fields\", function () {\r",
+							"    jsonData.data.forEach(account => {\r",
+							"        pm.expect(account).to.have.property(\"bankAccountId\");\r",
+							"        pm.expect(account).to.have.property(\"bankAccountNumber\");\r",
+							"        pm.expect(account).to.have.property(\"bankName\");\r",
+							"        pm.expect(account).to.have.property(\"shopperId\");\r",
+							"        pm.expect(account).to.have.property(\"email\");\r",
+							"        pm.expect(account).to.have.property(\"balance\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// 5. Verify shopperId is correct\r",
+							"pm.test(\"Bank account belongs to the correct shopper\", function () {\r",
+							"    const found = jsonData.data.some(\r",
+							"        account => account.shopperId === 6198\r",
+							"    );\r",
+							"    pm.expect(found).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// 6. Verify balance is numeric\r",
+							"pm.test(\"Account balance is numeric\", function () {\r",
+							"    jsonData.data.forEach(account => {\r",
+							"        pm.expect(account.balance).to.be.a(\"number\");\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "fb98d651-87a9-4687-a62e-7c41d0350ab6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwtToken}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{endpoint}}/bankaccounts?shopperId=6198",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"",
+						"bankaccounts"
+					],
+					"query": [
+						{
+							"key": "shopperId",
+							"value": "6198"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "96739a81-bf92-4807-8021-1bbfe59e11d3",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "356e34f7-3d3c-4c90-b219-f3fd9c125157",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "endpoint",
+			"value": "",
+			"description": "shopper ebdpoint"
+		},
+		{
+			"key": "jwtToken",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "addressId",
+			"value": ""
+		}
+	]
+}
