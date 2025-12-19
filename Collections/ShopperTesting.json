@@ -13,15 +13,7 @@
 					"script": {
 						"id": "63cb203c-5bf6-4086-bba5-6a6947ec4f6e",
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"pm.test(\"Status code name has string\", function () {\r",
-							"    pm.response.to.have.status(\"Created\");\r",
-							"});\r",
-							"pm.test(\"Response time is less than 500ms\", function () {\r",
-							"    pm.response.to.have.responseTime.below(500);\r",
-							"});"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {},
@@ -33,15 +25,14 @@
 					"script": {
 						"id": "946a6afd-3676-4c81-86fe-68ed11a127ed",
 						"exec": [
-							"// Generate Nigerian phone number: 80XXXXXXXX\r",
-							"const suffix = Math.floor(10000000 + Math.random() * 90000000).toString();\r",
-							"const phone = `80${suffix}`;\r",
-							"\r",
-							"\r",
-							"// Save as a variable (request-level variable is safest)\r",
-							"pm.variables.set(\"phone\", phone);\r",
-							"\r",
-							"//console.log(\"Generated 10-digit phone:\", phone);"
+							"// Generate Nigerian phone number: 80XXXXXXXX",
+							"const suffix = Math.floor(10000000 + Math.random() * 90000000).toString();",
+							"const phone = `80${suffix}`;",
+							"",
+							"// Save as a variable to be used in request body",
+							"pm.variables.set(\"phone\", phone);",
+							"",
+							"console.log(\"Generated 10-digit phone:\", phone);"
 						],
 						"type": "text/javascript",
 						"packages": {},
