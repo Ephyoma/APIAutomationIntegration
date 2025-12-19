@@ -58,7 +58,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"Nigeria\",\r\n  \"email\": \"ifyomaoella@gmail.com\",\r\n  \"firstName\": \"Ify\",\r\n  \"gender\": \"MALE\",\r\n  \"lastName\": \"Oma\",\r\n  \"password\": \"MyPassword001\",\r\n  \"phone\": \"8012653434\",\r\n  \"state\": \"Lagos\",\r\n  \"zoneId\": \"ALPHA\"\r\n}",
+					"raw": "{\r\n  \"city\": \"Lagos\",\r\n  \"country\": \"Nigeria\",\r\n  \"email\": \"jirehobi@gmail.com\",\r\n  \"firstName\": \"Ify\",\r\n  \"gender\": \"MALE\",\r\n  \"lastName\": \"Oma\",\r\n  \"password\": \"MyPassword001\",\r\n  \"phone\": \"8012666434\",\r\n  \"state\": \"Lagos\",\r\n  \"zoneId\": \"ALPHA\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
