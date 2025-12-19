@@ -1779,7 +1779,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{endpoint}}/cards?bankName=ICD&cardType=DEBIT&email={{$randomEmail}}&name=Nikita%20Bacha&shopperId=330436",
+					"raw": "{{endpoint}}/cards?bankName=ICD&cardType=DEBIT&email={{$randomEmail}}&name=Nikita%20Bacha&shopperId={{userId}}",
 					"host": [
 						"{{endpoint}}"
 					],
@@ -1805,7 +1805,7 @@
 						},
 						{
 							"key": "shopperId",
-							"value": "330436"
+							"value": "{{userId}}"
 						}
 					]
 				}
