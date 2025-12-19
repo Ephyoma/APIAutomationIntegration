@@ -176,7 +176,26 @@
 							"// verify that role returns shopper role\r",
 							"pm.test(\"role is SHOPPER\", function () {\r",
 							"    pm.expect(pm.response.json().data.role).to.eql(\"SHOPPER\");\r",
-							"});"
+							"});\r",
+							"\r",
+							"//save token to collection variable\r",
+							"pm.test(\"save token to collection variable\", function () {\r",
+							"    pm.expect(pm.response.json().data.token).to.not.be.null;\r",
+							"    pm.collectionVariables.set(\"token\", pm.response.json().data.token);\r",
+							"    });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "53025233-3395-4936-9ac7-8cede38c7ff7",
+						"exec": [
+							""
 						],
 						"type": "text/javascript",
 						"packages": {},
@@ -385,7 +404,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{endpoint}}/users/verify-account?token=kTsr4U7rPHc3EeolWNOKbEXTysJTZe34OgG3iNNpeZnLn",
+					"raw": "{{endpoint}}/users/verify-account?token={{token}}",
 					"host": [
 						"{{endpoint}}"
 					],
@@ -396,7 +415,7 @@
 					"query": [
 						{
 							"key": "token",
-							"value": "kTsr4U7rPHc3EeolWNOKbEXTysJTZe34OgG3iNNpeZnLn"
+							"value": "{{token}}"
 						}
 					]
 				}
@@ -2195,6 +2214,10 @@
 		},
 		{
 			"key": "addressId",
+			"value": ""
+		},
+		{
+			"key": "token",
 			"value": ""
 		}
 	]
