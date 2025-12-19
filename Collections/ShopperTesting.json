@@ -2179,7 +2179,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "37a562ca-8946-477c-a7f8-4bd26cc2a407",
+				"id": "215c4f34-96ba-47c8-93d8-65ea7f167b76",
 				"type": "text/javascript",
 				"packages": {},
 				"requests": {},
@@ -2191,7 +2191,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "1c435f03-9eac-4465-8065-295d85616a02",
+				"id": "4046c89e-fa21-44f6-b55b-6d32c8053e2e",
 				"type": "text/javascript",
 				"packages": {},
 				"requests": {},
@@ -2205,7 +2205,7 @@
 		{
 			"key": "endpoint",
 			"value": "",
-			"description": "shopper ebdpoint"
+			"description": "https://www.shoppersstack.com/shopping"
 		},
 		{
 			"key": "jwtToken",
