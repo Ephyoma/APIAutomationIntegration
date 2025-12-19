@@ -1721,7 +1721,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{endpoint}}/cards?bankName=ICD&cardType=DEBIT&email=ifyoma@gmail.com&name=Nikita%20Bacha&shopperId=330436",
+					"raw": "{{endpoint}}/cards?bankName=ICD&cardType=DEBIT&email={{$randomEmail}}&name=Nikita%20Bacha&shopperId=330436",
 					"host": [
 						"{{endpoint}}"
 					],
@@ -1739,7 +1739,7 @@
 						},
 						{
 							"key": "email",
-							"value": "ifyoma@gmail.com"
+							"value": "{{$randomEmail}}"
 						},
 						{
 							"key": "name",
